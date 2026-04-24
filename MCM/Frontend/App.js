@@ -105,11 +105,10 @@ export default function App() {
           if (res.ok) {
             return {
               timeStr: s.timeStr,
-              data: {
-                name: json.data.name,
-                extraAction: json.data.action,
-                benefit: json.data.benefit,
-                fullStory: json.data.fullStory
+             data: {
+                time: json.data.time,
+                extras: json.data.extras,
+                fullStory: json.data.fullStory,
               }
             };
           } else {
@@ -172,7 +171,7 @@ export default function App() {
             {[...schedules].sort((a, b) => a.startIdx - b.startIdx).map((s) => (
               <TouchableOpacity
                 key={s.id}
-                style={styles.planButton}
+                style={styles.listItem}
                 onPress={() => {
                   setSelectedItem(s);
                   setInputText(s.action);
@@ -180,8 +179,15 @@ export default function App() {
                   setModalVisible(true);
                 }}
               >
-                <View style={[styles.colorIndicator, { backgroundColor: s.color }]} />
-                <Text style={styles.planText}>{s.timeStr} : {s.action}</Text>
+                <View style={styles.listLeft}>
+                  <View style={[styles.dot, { backgroundColor: s.color }]} />
+                  <View>
+                    <Text style={styles.listTime}>{s.timeStr}</Text>
+                    <Text style={styles.listAction}>{s.action}</Text>
+                  </View>
+                </View>
+
+                <Text style={styles.arrow}>›</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -270,15 +276,15 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F7F8FA',
   },
 
   header: {
     paddingVertical: 16,
     paddingHorizontal: 15,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderColor: '#ffffff',
-    backgroundColor: '#ffffff',
+    borderColor: '#E9E9EE',
     alignItems: 'center',
   },
 
@@ -286,13 +292,13 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: '900',
     textAlign: 'center',
-    color: '#000000',
+    color: '#111111',
   },
 
   headerSubTitle: {
     marginTop: 3,
     fontSize: 11,
-    color: '#aaa',
+    color: '#888',
     fontWeight: '600',
   },
 
@@ -301,91 +307,106 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 12,
     gap: 12,
-    margin : 10,
   },
 
   leftSection: {
     flex: 1,
-    padding: 30,
-    backgroundColor: '#ffffff',
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#ffffff',
+    borderColor: '#E9E9EE',
   },
 
   sectionTitle: {
     fontSize: 20,
     fontWeight: '900',
-    marginBottom: 14,
-    color: '#000000',
+    marginBottom: 12,
+    color: '#111111',
   },
 
   planList: {
     flex: 1,
   },
 
-  planButton: {
+  listItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-    padding: 13,
-    backgroundColor: '#cdeaf9',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#cae8f7',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderColor: '#EFEFF3',
   },
 
-  colorIndicator: {
-    width: 10,
-    height: 36,
-    borderRadius: 6,
-    marginRight: 10,
-  },
-
-  planText: {
-    fontSize: 12,
+  listLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
-    color: '#000000',
-    lineHeight: 18,
-    fontWeight: '600',
+  },
+
+  dot: {
+    width: 8,
+    height: 32,
+    borderRadius: 6,
+    marginRight: 12,
+  },
+
+  listTime: {
+    fontSize: 11,
+    color: '#8B8B95',
+    marginBottom: 3,
+    fontWeight: '700',
+  },
+
+  listAction: {
+    fontSize: 15,
+    color: '#111111',
+    fontWeight: '800',
+  },
+
+  arrow: {
+    fontSize: 24,
+    color: '#C3C3CC',
+    marginLeft: 8,
   },
 
   rightSection: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 18,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#ffffff',
+    borderColor: '#E9E9EE',
   },
 
   dateBox: {
     height: 52,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderColor: '#000000',
+    borderColor: '#EFEFF3',
   },
 
   dateText: {
-    color: '#000000',
-    fontSize: 16,
+    color: '#111111',
+    fontSize: 18,
     fontWeight: '900',
     letterSpacing: 0.5,
   },
 
   extraButton: {
-    backgroundColor: '#9abaff',
+    backgroundColor: '#111111',
     paddingVertical: 16,
     marginTop: 14,
     borderRadius: 16,
     alignItems: 'center',
-    elevation: 5,
+    elevation: 3,
   },
 
   extraButtonText: {
-    color: '#fefefe',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '900',
   },
@@ -409,6 +430,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: '#111',
   },
 
   modalInput: {
@@ -417,6 +439,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     fontSize: 16,
+    color: '#111',
   },
 
   bottomContainer: {
