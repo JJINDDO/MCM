@@ -1,3 +1,25 @@
+import express from 'express';
+import cors from 'cors';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import dotenv from 'dotenv';
+
+// 1. 환경 변수 설정
+dotenv.config();
+
+// 2. express 앱 생성 (이 줄이 app.post보다 반드시 위에 있어야 합니다!)
+const app = express();
+
+// 3. 미들웨어 설정
+app.use(cors());
+app.use(express.json());
+
+// 4. Gemini 설정
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash", // 모델명 확인 (2.5-flash-lite는 존재하지 않는 모델일 수 있습니다)
+  generationConfig: { responseMimeType: "application/json" }
+});
+
 // 2. 메인 AI 스토리 생성 라우트
 app.post('/api/story', async (req, res) => {
   const { time, myAction } = req.body;
