@@ -11,10 +11,10 @@ const PORT = process.env.PORT || 8080;
 
 // Gemini AI 설정
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ 
+const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
   // 💡 중요: AI가 헛소리 안 하고 딱 JSON 형식으로만 대답하게 강제하는 옵션
-  generationConfig: { responseMimeType: "application/json" } 
+  generationConfig: { responseMimeType: "application/json" }
 });
 
 // 필수 설정
@@ -31,8 +31,8 @@ app.post('/api/story', async (req, res) => {
   const { time, myAction } = req.body;
 
   // 행동을 입력 안 했을 경우의 예외 처리
-  const userActionDescription = myAction 
-    ? `내가 "${myAction}" 행동을 하고 있을 때` 
+  const userActionDescription = myAction
+    ? `내가 "${myAction}" 행동을 하고 있을 때`
     : "내가 그 시간대에 할 법한 행동을 네가 알아서 상상해서";
 
   // AI에게 내릴 프롬프트(명령)
@@ -55,10 +55,23 @@ app.post('/api/story', async (req, res) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-    
-    // AI가 준 글자를 자바스크립트가 읽을 수 있는 진짜 JSON으로 변환
-    const storyData = JSON.parse(text);
 
+    console.log("RAW TEXT:", text);
+
+    let storyData;
+
+    try {
+      const cleanText = text
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
+
+      // AI가 준 글자를 자바스크립트가 읽을 수 있는 진짜 JSON으로 변환
+      storyData = JSON.parse(cleanText);
+    } catch (e) {
+      console.error("❌ JSON 파싱 실패:", text);
+      throw e;
+    }
     // 성공했을 때 돌려줄 결과
     res.status(200).json({
       message: "AI 스토리 생성 완료!",
