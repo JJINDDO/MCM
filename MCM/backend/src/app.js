@@ -36,7 +36,7 @@ app.post('/api/story', async (req, res) => {
 
   // 행동 예외 처리 (계획이 시원하게 망한 상황으로 설정)
   const userActionDescription = myAction 
-    ? `내가 "${myAction}"(을)를 야심 차게 계획했는데, 완벽하게 망해버린 상황.` 
+    ? `내가 "${myAction}"(을)를 야심 차게 계획했는데, 얼탱이없게 망해버린 상황.` 
     : `이 시간대에 내가 할 법한 흔한 계획을 네가 상상하고, 그게 아주 어이없게 실패한 상황.`;
 
   // AI에게 내릴 프롬프트
