@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/app/:path*",
-      "destination": "/backend/app.js"
+      "destination": "/backend/src/app.js"
     },
     {
       "source": "/(.*)",
-      "destination": "/frontend/index.html"
+      "destination": "/Frontend/index.js"
     }
   ]
 }
