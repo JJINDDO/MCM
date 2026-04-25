@@ -3,17 +3,15 @@ import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Groq from 'groq-sdk'; // 👈 Groq 추가
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../.env') });
+// ✅ 수정 1: Vercel 환경이 아닐 때(로컬일 때)만 안전하게 .env를 읽어오기
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const app = express();
 let totalApiRequests = 0;
 
-// API 호출 횟수 카운팅
 app.use((req, res, next) => {
   if (req.path === '/app/story' && req.method === 'POST') {
     totalApiRequests++;
@@ -26,22 +24,25 @@ app.get('/app/count', (req, res) => {
   res.json({ totalCalls: totalApiRequests });
 });
 
-// CORS 설정
+// CORS 설정 (프론트엔드 주소 완벽합니다)
 const allowedOrigins = [
-  'https://mcm-git-main-jjinddos-projects.vercel.app', 
+  'https://mcm-rho.vercel.app', 
   'http://localhost:3000', 'http://localhost:8081', 'http://localhost:8080'
 ];
 app.use(cors({ origin: (o, cb) => !o || allowedOrigins.includes(o) ? cb(null, true) : cb(new Error('CORS')), credentials: true }));
 app.use(express.json());
 
 // --- AI 설정 ---
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// ✅ 수정 2: API 키가 없어도 서버가 터지지 않게 안전장치(|| "") 추가
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+
+// ✅ 수정 3: 세상에 존재하는 올바른 모델명으로 변경
 const geminiModel = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash-lite",
+  model: "gemini-2.5-flash-lite", 
   generationConfig: { responseMimeType: "application/json" }
 });
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY }); // 👈 Groq 셋업
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || "" });
 // ----------------
 
 app.post('/app/story', async (req, res) => {

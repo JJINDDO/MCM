@@ -5,7 +5,7 @@ import Timetable from './components/Timetable';
 import ExtraPage from './components/ExtraPage'; 
 
 const PRESET_COLORS = ['#FF0000CC', '#FFFF00CC', '#29b829cc', '#0f0fb8cc', '#8c3434cc', '#d801d8cc'];
-const API_URL = "https://mcm-git-main-jjinddos-projects.vercel.app";
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('main'); 
