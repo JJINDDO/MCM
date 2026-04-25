@@ -26,6 +26,7 @@ app.get('/app/count', (req, res) => {
 
 // CORS 설정 (프론트엔드 주소 완벽합니다)
 const allowedOrigins = [
+  'https://mcm-3c8k.vercel.app',
   'https://mcm-rho.vercel.app',
   'https://mcm-p7cv678og-perjungs-projects.vercel.app',
   'https://mcm-git-main-jjinddos-projects.vercel.app', 
