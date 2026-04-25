@@ -12,7 +12,13 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 let totalApiRequests = 0;
 
-app.use(cors());
+app.use((req, res, next) => {
+  if (req.path === '/app/story' && req.method === 'POST') {
+    totalApiRequests++;
+    console.log(`[API 호출 알림] 누적 호출: ${totalApiRequests}회`);
+  }
+  next();
+});
 
 app.get('/app/count', (req, res) => {
   res.json({ totalCalls: totalApiRequests });
